@@ -18,13 +18,13 @@
     <li>SVGReader.js</li>
     <li>vec2.js</li>
     <li>svg2gcode.js</li>
-    
+</ul>
 <p><em>those three are parsing SVG to paths and paths to Gcode. I find them on Gcode-simulator https://github.com/tmpvar/gcode-simulator/tree/master/js. I simply modify it to become polar coordinate and polargraph flavor.</em></p>
 
 <p>_JS/ </p>
    <ul><li> dashBord.js <em>all functions needed for buttons ans inputs.</em></li>
    <li> setupParametes.js <em>all functions needed to setup the polargraph parameters.</em></li>
-    
+</ul>
 
 
 
