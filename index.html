@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- evite le dézoom sur les mobiles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="_css/styleGeneral.css" />
+    <title id="textTitre"> Traceur Pendulaire </title>
+    <script type="text/javascript" src="defaultProperties.json"></script>
+</head>
+
+
+
+<body>
+    <div class="bandeau">
+    </div>
+    <div id="corps">
+        <section>
+            <article style="width:250px;">
+                <lu>
+                    <h2>Polar Control</h2>
+                    <li>
+                        <br>
+                        <p class="introduction">PolarControl website allows to convert SVG to GCODE for <a href="http://www.polargraph.co.uk/">Polargraph</a>.</p>
+                        <p> The goal is to offert a simple, low, intuitive, evolutive and lightwreight controller.</p>
+                    </li>
+                    <li>
+                        <h4> How to use</h4>
+                        <p class="introduction">&#8227; Set your machine properties right and parse it. To load them as default replace or modify file defaultProperties.json in main directory. </p>
+                        <p class="introduction">&#8227; Make sure the dimension of your SVG correspond to the size of your Polargraph. to do it, simply adjust the property of your drawing layout within Inkscape or Illustrator before exporting svg file.</p>
+                        <p class="introduction">&#8227; Import and parse SVG file to Gcode</p>
+                        <p class="introduction">&#8227; Send your Gcode to the polargraph by using <a ref="https://github.com/euphy/polargraph/wiki/Standalone-command-queue-runner">send.py</a> script or by using SD card.</p>
+                    </li>
+                    <li>
+                        <h4>Usefull links</h4>
+                        <p><a href="https://github.com/euphy/polargraph/wiki/Polargraph-machine-commands-and-responses" target="_blank">&#8227; More information about <br>Polargraph Gcode and commandes.</a></p>
+                        <p class="introduction"><a href="https://github.com/euphy/polargraph/wiki/Vector-Optimizer" target="_blank">&#8227; Optimized Gcode and drawing paths with process.py script</a></p>
+                        <p><a href="https://github.com/Scott-Cooper/Drawbot_image_to_gcode_v2" target="_blank">&#8227; Get a picture into vectoriel drawing thanks to Drawbot image to gcode v2</a></p>
+
+                    </li>
+                </lu>
+            </article>
+        </section>
+        <section>
+
+            <article>
+                <lu>
+                    <h2>Parameters</h2>
+                    <li class="parameters">
+                        <p>Machine name :</p>
+                        <input type="text" name="machine name" id="machineName" value="Default" onchange="updateParameters()">
+                        <p style="margin-top: 10px;">Machine width (mm):</p>
+                        <input type=number name="Width motor" id="widthMotor" value="1000" onchange="updateParameters()">
+                        <p style="margin-top: 10px;">Machine height (mm):</p>
+                        <input type=number name="Height motor" id="heightMotor" value="2000" onchange="updateParameters()">
+                        <p style="margin-top: 10px;">home position (mm):</p>
+                        <div style="display:flex; margin-top: 5px;">
+                            <div style="padding-right:10px;">
+                                <p>X position</p><input type=number name="horizontal point" id="xPosition" value="500" style="width:60px;" onchange="updateParameters()">
+                            </div>
+                            <div>
+                                <p>Y position</p><input type=number name=" vertical point" id="yPosition" value="20" style="width:60px;" onchange="updateParameters()">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="parameters">
+                        <p>Stepper motor specificities</p>
+                        <div style="display:flex; margin-top: 10px;">
+                            <div style="padding-right:10px;">
+                                <p class="tooltip">mm/rev : <span class="tooltiptext">distance per revolution, periphery of spool</span></p>
+                                <input type=number name="distance per revolution" id="mmPerRev" value="40" style="width:60px;" onchange="updateParameters()">
+                            </div>
+                            <div>
+                                <p class="tooltip">steps/rev :<span class="tooltiptext">steps per revolution, refer to datasheet motor</span></p>
+                                <input type=number name="steps per revolution" id="setpsPerRev" value="200" style="width:60px;" onchange="updateParameters()">
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <p>microstepping :</p><input type=number name="microstepping" id="microstepping" value="16" onchange="updateParameters()">
+                        </div>
+                        <div style="display:flex; margin-top: 10px;">
+                            <div style="padding-right:10px;">
+                                <p>Max speed</p>
+                                <input type=number name="Max speed" id="maxSpeed" value="1722" style="width:60px;" placeholder="steps/s" onchange="updateParameters()">
+                            </div>
+                            <div>
+                                <p>Acceleration</p>
+                                <input type=number name="Acceleration" id="acceleration" value="1242" style="width:60px;" placeholder="steps/s" onchange="updateParameters()">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="parameters">
+                        <input type="button" class="button" name="setup" id="setup" onclick="setParameters()" value="Parse">
+                        <div style="display: flex; margin-top: 5px;" class="tooltip">
+                            <input type="button" class="smallButton" name="save" id="save" value="Save" onclick="saveParameters()" style="margin-right: 5px;"><span class="tooltiptext">replace defaultProperties.json file with new file</span>
+                            <!--  <label type="button" for="parametersImport" class="smallButton" name="Import" value="Import" style="cursor:pointer;">Import</label>
+                            <input type="file" accept=".txt, .svg" name="parametersImport" id="parametersImport" onChange="importParameters(event)" value="Parameters file" style="display: none;">-->
+                        </div>
+                    </li>
+                </lu>
+            </article>
+            <article>
+                <h2>SVG file</h2>
+                <lu>
+                    <li>
+                        <textarea id="svgDiv" rows="4" cols="35" placeholder="Write svg code, add and modify."></textarea><br>
+                        <input type="button" class="button" name="Parse" value="Parse" style="margin-right: 5px;" onclick=loadSVGFromText(svgDiv)>
+                        <div style="display: flex; margin-top: 5px;">
+                            <input type="button" class="smallButton" name="save" id="save" value="Save" onclick="exportSVG()" style="margin-right: 5px;">
+                            <label type="button" for="fileupload" class="smallButton" name="Import" value="Import" style="cursor:pointer;">Import</label>
+                            <input type="file" accept=".txt, .svg" name="fileupload" id="fileupload" onChange="loadSVG(event)" value="SVG file" style="display: none;">
+                        </div>
+                    </li>
+                </lu>
+            </article>
+        </section>
+        <section>
+            <article>
+                <h2>gcode</h2>
+                <lu>
+                    <li>
+                        <textarea id="gcodeDiv" rows="4" cols="15"></textarea><br>
+                        <input type="button" class="button" name="Download text" onclick="exportFile('test.txt', 'gcodeDiv')" value="Download .txt" style="margin-top: 10px;">
+                        <div style="display: flex; margin-top: 5px;">
+                            <input type="button" class="smallButton" name="Clear" value="Clear" onclick="clearData('gcodeDiv')" style="margin-right: 5px;">
+                            <label type="button" for="gcodeImport" class="smallButton" name="Import" value="Import" style="cursor:pointer;">Import</label>
+                            <input type="file" accept=".txt, .gcode" name="gcodeImport" id="gcodeImport" onChange="loadGcode(event)" value="Gcode file" style="display: none;">
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Commands</h4>
+                        <div style="display:flex;"> <input type="button" class="smallButton" name="penUp" value="Pen up" onclick="command('penUp')" style="margin-right: 5px;">
+                            <input type="button" class="smallButton" name="penDown" value="Pen down" onclick="command('penDown')" style="">
+                        </div>
+                        <div style="display:flex; margin-top: 5px;"> <input type="button" class="smallButton" name="goHome" value="Go home" onclick="command('goHome')" style="margin-right: 5px;">
+                            <input type="button" class="smallButton" name="reset" value="Reset machine" onclick="command('reset')" style="">
+                        </div>
+                    </li>
+                </lu>
+            </article>
+        </section>
+    </div>
+    <div class="bandeau"></div>
+</body>
+
+<script type="text/javascript" src="_js/vec2.js"></script>
+<script type="text/javascript" src="_js/SVGReader.js"></script>
+<script type="text/javascript" src="_js/svg2gcode.js"></script>
+<script type="text/javascript" src="_js/dashBoard.js"></script>
+<script type="text/javascript" src="_js/setupParameters.js"></script>
+
+</html>
